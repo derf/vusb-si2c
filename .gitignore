@@ -1,0 +1,3 @@
+/commandline/vusb-*
+/commandline/*.o
+/firmware/*.bin
