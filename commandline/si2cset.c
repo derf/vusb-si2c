@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv)
 {
-	int i, address;
+	int i;
 
 	i2c_init();
 	i2c_start();
@@ -16,14 +16,10 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	address = atoi(argv[1]);
-
-	for (i = 2; i < argc; i++) {
+	for (i = 1; i < argc; i++) {
 		i2c_tx_byte(atoi(argv[i]));
 	}
 
-	i2c_tx_byte(0);
-	i2c_tx_byte(address);
 	i2c_stop();
 	i2c_deinit();
 
