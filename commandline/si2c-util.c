@@ -198,16 +198,15 @@ void set_scl(char value)
 			(char *)buffer, sizeof(buffer), 5000);
 }
 
-unsigned char i2c_tx_byte(unsigned char byte)
+void si2c_tx_byte(unsigned char byte)
 {
 	signed char i;
-	unsigned char ack = 0;
-
-	set_sda(0);
-	usleep(10);
-	set_scl(0);
 
 	for (i = 7; i >= 0; i--) {
+		set_sda(0);
+		usleep(10);
+		set_scl(0);
+		usleep(10);
 		if (byte & (1 << i)) {
 			set_sda(1);
 		}
@@ -217,56 +216,28 @@ unsigned char i2c_tx_byte(unsigned char byte)
 		usleep(10);
 		set_scl(1);
 		usleep(10);
-		if (i > 0) {
-			set_sda(0);
-			usleep(10);
-			set_scl(0);
-			usleep(10);
-		}
 	}
-
-	return ack;
 }
 
-unsigned char i2c_rx_byte(unsigned char send_ack)
-{
-	signed char i;
-	unsigned char ret = 0;
-
-	set_sda(1);
-	for (i = 7; i >= -1; i--) {
-		if (( i < 0) && send_ack)
-			set_sda(0);
-		set_scl(1);
-		usleep(10);
-		if ((i >= 0) && ( get_status() & (1 << BIT_SDA)))
-			ret |= (1 << i);
-		if (( i < 0) && send_ack)
-			set_sda(1);
-		set_scl(0);
-		usleep(10);
-	}
-
-	return ret;
-}
-
-void i2c_start()
+void si2c_start()
 {
 	set_sda(0);
+	usleep(10);
 	set_scl(0);
-	usleep(1000);
+	usleep(10);
 }
 
-void i2c_stop()
+void si2c_stop()
 {
 	set_sda(1);
 	usleep(10);
 	set_scl(0);
 	usleep(10);
 	set_sda(0);
+	usleep(100);
 }
 
-void i2c_init()
+void si2c_init()
 {
 	usb_init();
 	if (usbOpenDevice
@@ -279,7 +250,7 @@ void i2c_init()
 	}
 }
 
-void i2c_deinit()
+void si2c_deinit()
 {
 	usb_close(handle);
 }

@@ -10,7 +10,7 @@ PREFIX ?= /usr/local
 bin_dir = ${DESTDIR}${PREFIX}/bin
 man_dir = ${DESTDIR}${PREFIX}/man/man1
 
-PROGRAMS = vusb-si2c vusb-si2cset
+PROGRAMS = vusb-si2c
 
 all: $(PROGRAMS)
 
@@ -19,12 +19,8 @@ all: $(PROGRAMS)
 
 si2c.o: si2c.c si2c-util.c si2c-util.h
 si2c-util.o: si2c-util.c
-si2cset.o: si2cset.c si2c-util.c si2c-util.h
 
 vusb-si2c: si2c.o si2c-util.o
-	$(CC) -o $@ $^ $(LIBS)
-
-vusb-si2cset: si2cset.o si2c-util.o
 	$(CC) -o $@ $^ $(LIBS)
 
 clean:
@@ -37,7 +33,5 @@ install:
 
 uninstall:
 	rm -f $(bin_dir)/vusb-si2c
-	rm -f $(bin_dir)/vusb-si2cset
-	rm -f $(man_dir)vusb-si2cset.1
 
 .PHONY: all strip clean install uninstall
